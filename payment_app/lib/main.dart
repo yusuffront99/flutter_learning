@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:payment_app/theme.dart';
 
 void main() {
-  runApp(PaymentApps());
+  return runApp(PaymentApps());
 }
 
 class PaymentApps extends StatefulWidget {
@@ -11,18 +11,60 @@ class PaymentApps extends StatefulWidget {
 }
 
 class _PaymentAppsState extends State<PaymentApps> {
+  int selectedIndex = -1;
+
   @override
   Widget build(BuildContext context) {
-    Widget option() {
+    Widget option(int index, String title, String subTitle, String price) {
       return GestureDetector(
+        onTap: () {
+          setState(() {
+            selectedIndex = index;
+          });
+        },
+        // The custom button
         child: Container(
-          padding: const EdgeInsets.all(20),
-          margin: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(20),
+          margin: EdgeInsets.all(20),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(14),
             border: Border.all(
-              color: Colors.white,
+              color: selectedIndex == index
+                  ? Color(0xff007DFF)
+                  : Color(0xff4D5B7C),
             ),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  selectedIndex == index
+                      ? Image.asset('assets/check_on.png', width: 15)
+                      : Image.asset('assets/check_off.png'),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: planTextStyle,
+                      ),
+                      Text(
+                        subTitle,
+                        style: descTextStyle,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: 25,
+                  ),
+                  Text(
+                    price,
+                    style: priceTextStyle,
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       );
@@ -30,14 +72,19 @@ class _PaymentAppsState extends State<PaymentApps> {
 
     Widget header() {
       return Padding(
-        padding: const EdgeInsets.only(top: 50, left: 32, right: 32),
+        padding: const EdgeInsets.all(
+          10,
+        ),
         child: Column(
           children: [
+            const SizedBox(
+              height: 25,
+            ),
             Center(
               child: Image.asset(
                 'assets/money.png',
-                width: 267,
-                height: 200,
+                width: 160,
+                height: 160,
               ),
             ),
             const SizedBox(
@@ -47,40 +94,60 @@ class _PaymentAppsState extends State<PaymentApps> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Upgrade to',
+                  'Dev Ccodicee',
                   style: titleTextStyle,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'Pro',
-                  style: proTextStyle,
                 )
               ],
             ),
             const SizedBox(
               height: 15,
             ),
-            Text(
-              'Go Unlock all features and \n build your own business bigger',
-              style: subTitleTextStyle,
-              textAlign: TextAlign.center,
-            ),
           ],
         ),
+      );
+    }
+
+    Widget joinUs() {
+      return Column(
+        children: [
+          Container(
+            height: 50,
+            width: 340,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(71),
+                ),
+              ),
+              onPressed: () {},
+              child: Text('Join Us', style: buttonTitleTextStyle),
+            ),
+          ),
+        ],
       );
     }
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        backgroundColor: const Color(0xff04112F),
-        body: Column(
-          children: [
-            header(),
-            option(),
-            option(),
-            option(),
-          ],
+        backgroundColor: Color(0xff131A46),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              header(),
+              option(0, 'Ccodicee', 'Mobile Developer', '\$23'),
+              option(1, 'Dev', 'Web Developer', '\$23'),
+              option(2, 'Dart', 'Fullstack Developer', '\$23'),
+              SizedBox(
+                height: 50,
+              ),
+              selectedIndex == -1 ? SizedBox() : joinUs(),
+              SizedBox(
+                height: 50,
+              ),
+            ],
+          ),
         ),
       ),
     );
